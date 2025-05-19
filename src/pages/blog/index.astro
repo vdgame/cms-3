@@ -1,0 +1,135 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import {
+  latestBlogs,
+  popularBlogs,
+  popularNews,
+  popularQuestions,
+  tags,
+  categories
+} from '../../data/mockData';
+
+// 获取博客相关的分类
+const blogCategories = categories.slice(0, 6);
+
+// 获取热门标签
+const popularTags = tags.slice(0, 15);
+
+// 分页参数
+const currentPage = 1;
+const totalPages = 5;
+const itemsPerPage = 12;
+
+// 页面标题
+const title = "博客 - 分享技术见解和经验";
+---
+
+<MainLayout title={title}>
+  <div class="container py-8">
+    <!-- 标题区域 -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">技术博客</h1>
+      <p class="text-gray-600">
+        发现高质量的技术文章、教程和经验分享，了解行业最新动态和最佳实践。
+      </p>
+    </div>
+
+    <!-- 三列布局 -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- 左侧分类导航 -->
+      <div class="lg:col-span-3">
+        <div class="sticky top-24">
+          <div class="card p-4 mb-6">
+            <h3 class="text-lg font-bold mb-4">内容分类</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="/blog" class="flex justify-between items-center text-blue-600 font-medium">
+                  所有博客
+                  <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">{latestBlogs.length}</span>
+                </a>
+              </li>
+              {blogCategories.map(category => (
+                <li>
+                  <a href={`/category/${category.slug}`} class="flex justify-between items-center text-gray-700 hover:text-blue-600">
+                    {category.name}
+                    <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">24</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="card p-4">
+            <h3 class="text-lg font-bold mb-4">热门标签</h3>
+            <div class="flex flex-wrap gap-2">
+              {popularTags.map(tag => (
+                <a href={`/tag/${tag.slug}`} class="tag">{tag.name}</a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 中间内容区 -->
+      <div class="lg:col-span-6">
+        <div class="grid grid-cols-1 gap-6 mb-8">
+          {latestBlogs.slice(0, itemsPerPage).map(post => (
+            <BlogCard post={post} />
+          ))}
+        </div>
+
+        <!-- 分页导航 -->
+        <div class="flex justify-center mt-8">
+          <nav class="inline-flex rounded-md shadow-sm" aria-label="分页导航">
+            <a
+              href="#"
+              class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+              aria-label="上一页"
+            >
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </a>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <a
+                href={`/blog?page=${page}`}
+                class={`px-4 py-2 border border-gray-300 ${
+                  page === currentPage
+                    ? 'bg-blue-50 text-blue-600 border-blue-500'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {page}
+              </a>
+            ))}
+
+            <a
+              href="#"
+              class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+              aria-label="下一页"
+            >
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- 右侧侧边栏 -->
+      <div class="lg:col-span-3">
+        <Sidebar
+          showCreateButton={true}
+          createButtonLink="/blog/create"
+          createButtonText="发布博客"
+          popularPosts={popularBlogs.slice(0, 5)}
+          popularQuestions={popularQuestions.slice(0, 5)}
+          popularNews={popularNews.slice(0, 5)}
+        />
+      </div>
+    </div>
+  </div>
+</MainLayout>

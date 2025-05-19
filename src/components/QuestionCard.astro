@@ -1,0 +1,83 @@
+---
+import type { Question } from '../data/mockData';
+import { formatDate } from '../utils/dateUtils';
+
+interface Props {
+  question: Question;
+  compact?: boolean;
+}
+
+const { question, compact = false } = Astro.props;
+---
+
+<article class="question-card card transition-transform duration-300 hover:-translate-y-1 h-full">
+  <div class="p-4">
+    <div class="flex items-start">
+      <!-- 投票计数 -->
+      <div class="flex flex-col items-center mr-4 w-16">
+        <div class="flex flex-col items-center bg-gray-50 rounded p-2 mb-2">
+          <span class="text-xl font-bold text-blue-600">{question.voteCount}</span>
+          <span class="text-xs text-gray-500">得票</span>
+        </div>
+        <div class="flex flex-col items-center bg-gray-50 rounded p-2">
+          <span class="text-xl font-bold text-green-600">{question.answerCount}</span>
+          <span class="text-xs text-gray-500">回答</span>
+        </div>
+      </div>
+
+      <!-- 问题内容 -->
+      <div class="flex-grow">
+        <div class="flex items-center mb-3">
+          <img src={question.author.avatar} alt={question.author.name} class="w-6 h-6 rounded-full mr-2" />
+          <span class="text-sm text-gray-600">{question.author.name}</span>
+          <span class="mx-2 text-gray-300">•</span>
+          <time datetime={question.createdAt} class="text-sm text-gray-500">{formatDate(question.createdAt)}</time>
+
+          {question.solved && (
+            <span class="ml-2 bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">已解决</span>
+          )}
+        </div>
+
+        <h3 class="text-lg font-bold mb-2 line-clamp-2">
+          <a href={`/questions/${question.slug}`} class="hover:text-blue-600 transition-colors">{question.title}</a>
+        </h3>
+
+        {!compact && (
+          <p class="text-gray-600 mb-3 line-clamp-3">{question.excerpt}</p>
+        )}
+
+        <div class="flex flex-wrap gap-1 mb-3">
+          {question.tags.map(tag => (
+            <a href={`/tag/${tag.slug}`} class="tag text-xs">{tag.name}</a>
+          ))}
+        </div>
+
+        <div class="flex items-center text-sm text-gray-500">
+          <div class="flex items-center mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <span>{question.viewCount}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <!-- 背景形状 -->
+  <rect x="10" y="10" width="40" height="40" rx="8" fill="#3B82F6" />
+
+  <!-- 文档图标 -->
+  <path d="M25 20 L35 20 L35 40 L25 40 Z" fill="white" />
+  <path d="M30 15 L40 25 L30 25 Z" fill="white" />
+
+  <!-- 文字部分 -->
+  <text x="60" y="36" font-family="Arial, sans-serif" font-weight="bold" font-size="24" fill="#3B82F6">
+    ContentPlatform
+  </text>
+</svg>

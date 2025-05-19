@@ -1,0 +1,112 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import BlogCard from '../components/BlogCard.astro';
+import NewsCard from '../components/NewsCard.astro';
+import QuestionCard from '../components/QuestionCard.astro';
+import Sidebar from '../components/Sidebar.astro';
+import {
+  latestBlogs,
+  latestNews,
+  latestQuestions,
+  popularBlogs,
+  popularNews,
+  popularQuestions,
+  tags
+} from '../data/mockData';
+
+// 获取热门标签
+const popularTags = tags.slice(0, 10);
+
+// 页面标题
+const title = "内容平台 - 分享知识，连接世界";
+---
+
+<MainLayout title={title}>
+  <div class="container py-8">
+    <!-- 头部热门区域 -->
+    <section class="mb-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- 左侧大卡片 -->
+        <div class="md:col-span-2 h-full">
+          {latestBlogs[0] && (
+            <BlogCard post={latestBlogs[0]} />
+          )}
+        </div>
+
+        <!-- 右侧小卡片 -->
+        <div class="flex flex-col space-y-6">
+          {latestNews.slice(0, 2).map(item => (
+            <NewsCard news={item} compact={true} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 主要内容区 -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- 左侧内容区 -->
+      <div class="lg:col-span-3">
+        <!-- 最新资讯部分 -->
+        <section class="mb-12">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">最新资讯</h2>
+            <a href="/news" class="text-blue-600 hover:text-blue-800 font-medium">
+              查看全部
+              <span class="ml-1">→</span>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {latestNews.slice(0, 6).map(item => (
+              <NewsCard news={item} />
+            ))}
+          </div>
+        </section>
+
+        <!-- 最新博客部分 -->
+        <section class="mb-12">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">最新博客</h2>
+            <a href="/blog" class="text-blue-600 hover:text-blue-800 font-medium">
+              查看全部
+              <span class="ml-1">→</span>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {latestBlogs.slice(1, 7).map(post => (
+              <BlogCard post={post} />
+            ))}
+          </div>
+        </section>
+
+        <!-- 热门问答部分 -->
+        <section>
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">热门问答</h2>
+            <a href="/questions" class="text-blue-600 hover:text-blue-800 font-medium">
+              查看全部
+              <span class="ml-1">→</span>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4">
+            {latestQuestions.slice(0, 5).map(question => (
+              <QuestionCard question={question} />
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <!-- 右侧侧边栏 -->
+      <div>
+        <Sidebar
+          popularTags={popularTags}
+          popularPosts={popularBlogs.slice(0, 5)}
+          popularNews={popularNews.slice(0, 5)}
+          popularQuestions={popularQuestions.slice(0, 5)}
+        />
+      </div>
+    </div>
+  </div>
+</MainLayout>

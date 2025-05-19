@@ -1,0 +1,158 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import {
+  latestNews,
+  popularBlogs,
+  popularNews,
+  popularQuestions,
+  tags,
+  categories
+} from '../../data/mockData';
+
+// 获取新闻相关的分类
+const newsCategories = categories.slice(0, 6);
+
+// 获取热门标签
+const popularTags = tags.slice(0, 15);
+
+// 分页参数
+const currentPage = 1;
+const totalPages = 5;
+const itemsPerPage = 12;
+
+// 页面标题
+const title = "资讯 - 了解技术最新动态";
+---
+
+<MainLayout title={title}>
+  <div class="container py-8">
+    <!-- 标题区域 -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">技术资讯</h1>
+      <p class="text-gray-600">
+        了解技术领域的最新动态、发展趋势和重要事件，把握行业脉搏。
+      </p>
+    </div>
+
+    <!-- 三列布局 -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- 左侧分类导航 -->
+      <div class="lg:col-span-3">
+        <div class="sticky top-24">
+          <div class="card p-4 mb-6">
+            <h3 class="text-lg font-bold mb-4">资讯分类</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="/news" class="flex justify-between items-center text-blue-600 font-medium">
+                  所有资讯
+                  <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">{latestNews.length}</span>
+                </a>
+              </li>
+              <li>
+                <a href="/news?filter=featured" class="flex justify-between items-center text-gray-700 hover:text-blue-600">
+                  精选报道
+                  <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">12</span>
+                </a>
+              </li>
+              {newsCategories.map(category => (
+                <li>
+                  <a href={`/category/${category.slug}`} class="flex justify-between items-center text-gray-700 hover:text-blue-600">
+                    {category.name}
+                    <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">18</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="card p-4">
+            <h3 class="text-lg font-bold mb-4">热门标签</h3>
+            <div class="flex flex-wrap gap-2">
+              {popularTags.map(tag => (
+                <a href={`/tag/${tag.slug}`} class="tag">{tag.name}</a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 中间内容区 -->
+      <div class="lg:col-span-6">
+        <!-- 资讯排序和过滤 -->
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex space-x-4">
+            <a href="/news?sort=newest" class="text-blue-600 border-b-2 border-blue-600 pb-1">最新</a>
+            <a href="/news?sort=hot" class="text-gray-600 hover:text-blue-600 pb-1">热门</a>
+            <a href="/news?sort=featured" class="text-gray-600 hover:text-blue-600 pb-1">精选</a>
+          </div>
+
+          <div>
+            <select class="border border-gray-300 rounded px-2 py-1 text-sm bg-white">
+              <option value="all">全部时间</option>
+              <option value="day">今天</option>
+              <option value="week">本周</option>
+              <option value="month">本月</option>
+              <option value="year">今年</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 资讯列表 -->
+        <div class="grid grid-cols-1 gap-6 mb-8">
+          {latestNews.slice(0, itemsPerPage).map(news => (
+            <NewsCard news={news} />
+          ))}
+        </div>
+
+        <!-- 分页导航 -->
+        <div class="flex justify-center mt-8">
+          <nav class="inline-flex rounded-md shadow-sm" aria-label="分页导航">
+            <a
+              href="#"
+              class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+              aria-label="上一页"
+            >
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </a>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <a
+                href={`/news?page=${page}`}
+                class={`px-4 py-2 border border-gray-300 ${
+                  page === currentPage
+                    ? 'bg-blue-50 text-blue-600 border-blue-500'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {page}
+              </a>
+            ))}
+
+            <a
+              href="#"
+              class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+              aria-label="下一页"
+            >
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- 右侧侧边栏 -->
+      <div class="lg:col-span-3">
+        <Sidebar
+          popularPosts={popularBlogs.slice(0, 5)}
+          popularQuestions={popularQuestions.slice(0, 5)}
+          popularNews={popularNews.slice(0, 5)}
+        />
+      </div>
+    </div>
+  </div>
+</MainLayout>

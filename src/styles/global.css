@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* 主题颜色 - 淡蓝色系 */
+  --color-primary: 59 130 246; /* blue-500 */
+  --color-primary-light: 96 165 250; /* blue-400 */
+  --color-primary-dark: 37 99 235; /* blue-600 */
+  --color-accent: 249 115 22; /* orange-500 - 强调色 */
+  --color-background: 255 255 255; /* white */
+  --color-text: 31 41 55; /* gray-800 */
+  --color-muted: 156 163 175; /* gray-400 */
+  --color-border: 229 231 235; /* gray-200 */
+  --color-footer: 243 244 246; /* gray-100 */
+}
+
+@layer base {
+  body {
+    @apply bg-white text-gray-800 font-sans;
+  }
+  h1 {
+    @apply text-3xl font-bold mb-4;
+  }
+  h2 {
+    @apply text-2xl font-bold mb-3;
+  }
+  h3 {
+    @apply text-xl font-bold mb-2;
+  }
+  a {
+    @apply text-blue-500 hover:text-blue-700 transition-colors;
+  }
+  p {
+    @apply mb-4;
+  }
+}
+
+@layer components {
+  .container {
+    @apply px-4 mx-auto max-w-7xl;
+  }
+
+  .btn {
+    @apply px-4 py-2 rounded font-medium transition-colors;
+  }
+
+  .btn-primary {
+    @apply bg-blue-500 text-white hover:bg-blue-600;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+  }
+
+  .btn-accent {
+    @apply bg-orange-500 text-white hover:bg-orange-600;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden;
+  }
+
+  .tag {
+    @apply inline-block px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 mr-2;
+  }
+
+  .avatar {
+    @apply rounded-full object-cover;
+  }
+}
+
+/* 响应式设计工具类 */
+@layer utilities {
+  .mobile-only {
+    @apply block md:hidden;
+  }
+
+  .desktop-only {
+    @apply hidden md:block;
+  }
+}

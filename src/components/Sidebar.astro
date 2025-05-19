@@ -1,0 +1,137 @@
+---
+import type { BlogPost, NewsItem, Question, Tag } from '../data/mockData';
+import { formatDate } from '../utils/dateUtils';
+
+interface Props {
+  popularTags?: Tag[];
+  popularPosts?: BlogPost[];
+  popularNews?: NewsItem[];
+  popularQuestions?: Question[];
+  showCreateButton?: boolean;
+  createButtonLink?: string;
+  createButtonText?: string;
+}
+
+const {
+  popularTags = [],
+  popularPosts = [],
+  popularNews = [],
+  popularQuestions = [],
+  showCreateButton = false,
+  createButtonLink = "",
+  createButtonText = "发布内容"
+} = Astro.props;
+---
+
+<aside class="sidebar space-y-6">
+  {showCreateButton && (
+    <div class="card p-4">
+      <a href={createButtonLink} class="btn btn-primary w-full flex justify-center items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        {createButtonText}
+      </a>
+    </div>
+  )}
+
+  {popularTags.length > 0 && (
+    <div class="card p-4">
+      <h3 class="text-lg font-bold mb-3">热门标签</h3>
+      <div class="flex flex-wrap gap-2">
+        {popularTags.map(tag => (
+          <a href={`/tag/${tag.slug}`} class="tag">{tag.name}</a>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {popularPosts.length > 0 && (
+    <div class="card p-4">
+      <h3 class="text-lg font-bold mb-3">推荐博客</h3>
+      <ul class="space-y-3">
+        {popularPosts.map(post => (
+          <li class="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
+            <a href={`/blog/${post.slug}`} class="text-blue-700 hover:text-blue-500 font-medium line-clamp-2">
+              {post.title}
+            </a>
+            <div class="flex items-center mt-1 text-xs text-gray-500">
+              <img src={post.author.avatar} alt={post.author.name} class="w-4 h-4 rounded-full mr-1" />
+              <span>{post.author.name}</span>
+              <span class="mx-1">•</span>
+              <time datetime={post.createdAt}>{formatDate(post.createdAt)}</time>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {popularNews.length > 0 && (
+    <div class="card p-4">
+      <h3 class="text-lg font-bold mb-3">热门资讯</h3>
+      <ul class="space-y-3">
+        {popularNews.map(item => (
+          <li class="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
+            <a href={`/news/${item.slug}`} class="text-blue-700 hover:text-blue-500 font-medium line-clamp-2">
+              {item.title}
+            </a>
+            <div class="flex items-center mt-1 text-xs text-gray-500">
+              {item.source && (
+                <>
+                  <span class="bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-xs mr-2">{item.source}</span>
+                </>
+              )}
+              <time datetime={item.createdAt}>{formatDate(item.createdAt)}</time>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {popularQuestions.length > 0 && (
+    <div class="card p-4">
+      <h3 class="text-lg font-bold mb-3">热门问题</h3>
+      <ul class="space-y-3">
+        {popularQuestions.map(question => (
+          <li class="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
+            <a href={`/questions/${question.slug}`} class="text-blue-700 hover:text-blue-500 font-medium line-clamp-2">
+              {question.title}
+            </a>
+            <div class="flex items-center justify-between mt-1 text-xs text-gray-500">
+              <div class="flex items-center">
+                <span class="bg-blue-100 text-blue-800 px-1 py-0.5 rounded text-xs mr-1">
+                  {question.voteCount} 票
+                </span>
+                <span class="bg-green-100 text-green-800 px-1 py-0.5 rounded text-xs">
+                  {question.answerCount} 回答
+                </span>
+              </div>
+              {question.solved && (
+                <span class="bg-green-100 text-green-800 px-1 py-0.5 rounded text-xs">已解决</span>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  <!-- 广告区块 -->
+  <div class="card p-4 bg-gray-50">
+    <h3 class="text-sm font-medium text-gray-500 mb-2">赞助内容</h3>
+    <div class="rounded overflow-hidden">
+      <img src="https://picsum.photos/seed/ad/300/250" alt="广告" class="w-full" />
+    </div>
+  </div>
+</aside>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
